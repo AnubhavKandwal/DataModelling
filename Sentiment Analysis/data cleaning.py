@@ -13,8 +13,7 @@ Message broken into 5 parts:
             2. time
             3. sender
             4. msg
-'''
-        
+'''      
 class sourceData:
     
     #intialize the file
@@ -36,33 +35,45 @@ class sourceData:
         if (type(num) == int):
             for i in range(num):
                 s = chat[i]
-                time = s[(s.find(',')+2):s.find('-', s.find(','))]
-                date = s[0:s.find(',')]
-                Sender = s[(s.find('-')+2):s.find(':',s.find('-'))]
-                Message = s[(s.find(':',s.find('-'))+2):]
+                if re.search(r"^[0-9][0-9]/[0-9][0-9]/[0-9][0-9]", s):
+                    time = s[s.find(','):s.find('-', s.find(','))]
+                    date = s[0:s.find(',')]
+                    Sender = s[s.find('-'):s.find(':',s.find('-'))]
+                    Message = s[s.find(':',s.find('-')):]
+                    
+                    temp_list = list()
+                    temp_list.append(date)
+                    temp_list.append(time)
+                    temp_list.append(Sender)
+                    temp_list.append(Message)
+                    
+                    finalList.append(temp_list)
                 
-                temp_list = list()
-                temp_list.append(date)
-                temp_list.append(time)
-                temp_list.append(Sender)
-                temp_list.append(Message)
-                
-                finalList.append(temp_list)
+                else:
+                    Msg = finalList[-1][3]
+                    Cht = Msg.join([" ", s])
+                    finalList[-1][3] = Cht
         else:
             for i in range(len(chat)):
                 s = chat[i]
-                time = s[s.find(','):s.find('-', s.find(','))]
-                date = s[0:s.find(',')]
-                Sender = s[s.find('-'):s.find(':',s.find('-'))]
-                Message = s[s.find(':',s.find('-')):]
+                if re.search(r"^[0-9][0-9]/[0-9][0-9]/[0-9][0-9]", s):
+                    time = s[s.find(','):s.find('-', s.find(','))]
+                    date = s[0:s.find(',')]
+                    Sender = s[s.find('-'):s.find(':',s.find('-'))]
+                    Message = s[s.find(':',s.find('-')):]
+                    
+                    temp_list = list()
+                    temp_list.append(date)
+                    temp_list.append(time)
+                    temp_list.append(Sender)
+                    temp_list.append(Message)
+                    
+                    finalList.append(temp_list)
                 
-                temp_list = list()
-                temp_list.append(date)
-                temp_list.append(time)
-                temp_list.append(Sender)
-                temp_list.append(Message)
-                
-                finalList.append(temp_list)
+                else:
+                    Msg = finalList[-1][3]
+                    Cht = Msg.join([" ", s])
+                    finalList[-1][3] = Cht
         
         return finalList
     
@@ -85,11 +96,11 @@ class sourceData:
 def main():
     
     print('File that needs to be opened:', end = ' ')
-    filename = input()
+    filename = 'WhatsApp Chat with XoN.txt'
     source = sourceData(filename)
     
     source.fileInfo()
-    print('How many lines:', end = ' ')
+    print('How many lines: (Type "All" for complete file)', end = ' ')
     num = input()
     value = source.createList(num)
     source.createDataset(value)
